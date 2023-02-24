@@ -7,11 +7,15 @@ class HiddenMarkovModel:
         """_summary_
 
         Args:
-            observation_states (np.ndarray): _description_
-            hidden_states (np.ndarray): _description_
-            prior_probabilities (np.ndarray): _description_
-            transition_probabilities (np.ndarray): _description_
-            emission_probabilities (np.ndarray): _description_
+            observation_states (np.ndarray): 1D array of all possible observation states
+            hidden_states (np.ndarray): 1D array of all possible hidden states
+            prior_probabilities (np.ndarray): 1D array of prior probabilities of each hidden state, 
+                                            indices correspond to indices in hidden_states
+            transition_probabilities (np.ndarray): 2D array of transition probabilities of hidden states,
+                                                    indices correspond to indices in hidden_states
+            emission_probabilities (np.ndarray): 2D array of emission probabilities, row indices correspond to
+                                                    indices in hidden states and column indices correspond to
+                                                    indices in observation_states
         """             
         self.observation_states = observation_states
         self.observation_states_dict = {observation_state: observation_state_index \
