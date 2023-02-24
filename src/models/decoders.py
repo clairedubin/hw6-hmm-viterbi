@@ -33,28 +33,37 @@ class ViterbiAlgorithm:
         # Compute initial delta:
         # 1. Calculate the product of the prior and emission probabilities. This will be used to decode the first observation state.
         # 2. Scale      
-        delta = np.multiply()
+
+        first_obs_idx = self.hmm_object.observation_states_dict[decode_observation_states[0]]
+        delta = self.hmm_object.prior_probabilities * self.hmm_object.emission_probabilities[:,first_obs_idx]
 
         # For each observation state to decode, select the hidden state sequence with the highest probability (i.e., Viterbi trellis)
-        for trellis_node in range(1, len(decode_observation_states)):
+        for node in range(1, len(decode_observation_states)):
 
             # TODO: comment the initialization, recursion, and termination steps
 
-            product_of_delta_and_transition_emission =  np.multiply()
-            
-            # Update delta and scale
+            obs = decode_observation_states[node]
+            obs_idx = self.hmm_object.observation_states_dict[obs]
+            probs=[]            
 
-            # Select the hidden state sequence with the maximum probability
+            for hidden_state_idx,hidden_state in enumerate(self.hmm_object.hidden_states):
+                    
+                prob = delta[hidden_state_idx]*self.hmm_object.transition_probabilities[hidden_state_idx, :]*self.hmm_object.emission_probabilities[:, obs_idx]
+                probs += [prob]
 
-            # Update best path
-            for hidden_state in range(len(self.hmm_object.hidden_states)):
-            
-            # Set best hidden state sequence in the best_path np.ndarray THEN copy the best_path to path
-
-            path = best_path.copy()
+            prob_matrix = np.vstack([np.array(prob) for prob in probs])
+            delta = np.max(prob_matrix, axis=0)    
+            path[node] = np.argmax(prob_matrix, axis=0)
+                
+           
 
         # Select the last hidden state, given the best path (i.e., maximum probability)
-
-        best_hidden_state_path = np.array([])
+        prev_idx = np.argmax(delta)
+        prev_val = self.hmm_object.hidden_states_dict[prev_idx]
+        best_hidden_state_path = [prev_val]
+                
+        for i in range(1, path.shape[0])[::-1]:
+            prev_idx = path[i, int(prev_idx)]
+            best_hidden_state_path = [self.hmm_object.hidden_states_dict[prev_idx]] + best_hidden_state_path
 
         return best_hidden_state_path
