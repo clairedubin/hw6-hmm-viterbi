@@ -54,3 +54,8 @@ def test_deliverable():
 
     #changed from 0.8 to 0.6 per Andrew's message on Slack
     assert np.sum(prim_cm_data['hidden_states'] == decoded_hidden_states_for_observed_states_of_prim_cm)/len(prim_cm_data['observation_states']) == 0.6
+
+
+
+    ###Additional test: check length of observations is expected
+    assert len(prim_cm_data['observation_states']) == len(decoded_hidden_states_for_observed_states_of_prim_cm)
